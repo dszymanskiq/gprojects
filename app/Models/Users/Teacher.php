@@ -15,6 +15,6 @@ class Teacher extends User
 
     public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'teacher_id');
     }
 }

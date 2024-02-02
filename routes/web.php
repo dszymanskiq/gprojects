@@ -28,6 +28,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'joinProject'
 ])->group(function () {
     Route::get('/dashboard', function () {
         if(auth()->user()?->type === 'teacher') {
@@ -41,3 +42,5 @@ Route::middleware([
         }
     })->name('dashboard');
 });
+
+Route::get('/join/{project:slug}', [\App\Http\Controllers\ProjectController::class, 'join'])->name('join-project');

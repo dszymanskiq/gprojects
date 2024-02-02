@@ -6,8 +6,14 @@ use App\Models\Users\Student;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectTask extends Model
+class Task extends Model
 {
+    protected $fillable = [
+        'id',
+        'name',
+        'hours'
+    ];
+
     public function project(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Project::class);

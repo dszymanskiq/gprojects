@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group_student', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(\App\Models\Group::class);
-            $table->foreignIdFor(\App\Models\Users\Student::class,'student_id');
-            $table->timestamps();
+        Schema::table('projects', function (Blueprint $table) {
+            $table->string('slug')->unique();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_student');
+        Schema::table('projects', function (Blueprint $table) {
+            $table->dropColumn('slug');
+        });
     }
 };

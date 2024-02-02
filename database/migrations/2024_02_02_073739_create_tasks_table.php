@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_tasks', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Project::class);
             $table->foreignIdFor(\App\Models\Users\Student::class)->nullable();
             $table->string('name');
-            $table->integer('estimated_hours')->nullable();
+            $table->integer('hours')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_tasks');
+        Schema::dropIfExists('tasks');
     }
 };
