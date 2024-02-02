@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\AccountTypes\Student;
-use App\Models\AccountTypes\Teacher;
+use App\Models\Users\Student;
+use App\Models\Users\Teacher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

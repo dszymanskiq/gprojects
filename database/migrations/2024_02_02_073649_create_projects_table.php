@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\AccountTypes\Teacher::class);
+            $table->foreignIdFor(\App\Models\Users\Teacher::class);
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamp('due_date')->nullable();

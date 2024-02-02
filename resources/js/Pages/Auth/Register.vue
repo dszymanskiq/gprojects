@@ -33,22 +33,22 @@ const submit = () => {
         </template>
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="mb-3">
                 <InputLabel for="name" value="Typ konta" />
-                <input type="radio" name="type" value="student">
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.name" />
+                <div class="w-full flex text-sm mt-1">
+                    <div class="w-1/2 flex items-center space-x-2">
+                        <input type="radio" id="type-teacher" v-model="form.type" value="teacher">
+                        <InputLabel for="type-teacher" value="Nauczyciel" />
+                    </div>
+                    <div class="w-1/2 flex items-center space-x-2">
+                        <input type="radio" id="type-student" v-model="form.type" value="student">
+                        <InputLabel for="type-student" value="Student" />
+                    </div>
+                </div>
+                <InputError class="mt-2" :message="form.errors.type" />
             </div>
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Imię i nazwisko" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -62,7 +62,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Adres email" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -75,7 +75,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Hasło" />
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -88,7 +88,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+                <InputLabel for="password_confirmation" value="Potwierdź hasło" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -115,11 +115,11 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Already registered?
+                    Zaloguj się
                 </Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                    Zarejestruj
                 </PrimaryButton>
             </div>
         </form>

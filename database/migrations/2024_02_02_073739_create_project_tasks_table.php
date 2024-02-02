@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('project_tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Project::class);
-            $table->foreignIdFor(\App\Models\AccountTypes\Student::class)->nullable();
+            $table->foreignIdFor(\App\Models\Users\Student::class)->nullable();
             $table->string('name');
             $table->integer('estimated_hours')->nullable();
             $table->timestamps();

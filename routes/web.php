@@ -22,7 +22,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::middleware([
     'auth:sanctum',
@@ -30,6 +30,14 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        if(auth()->user()?->type === 'teacher') {
+            return redirect()->route('teacher.dashboard');
+        }
+        elseif(auth()->user()?->type === 'student') {
+            return redirect()->route('student.dashboard');
+        }
+        else {
+            return redirect()->redirect('/');
+        }
     })->name('dashboard');
 });

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('group_student', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Group::class);
-            $table->foreignIdFor(\App\Models\AccountTypes\Student::class);
+            $table->foreignIdFor(\App\Models\Users\Student::class);
             $table->timestamps();
         });
     }

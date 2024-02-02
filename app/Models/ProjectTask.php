@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\AccountTypes\Student;
+use App\Models\Users\Student;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
