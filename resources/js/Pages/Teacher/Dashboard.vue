@@ -2,11 +2,28 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     projects: Array
 })
+const confirmDelete = (project) => {
+    Swal.fire({
+        title: 'Czy na pewno chcesz usunąć ten projekt?',
+        text: "Nie będziesz mógł cofnąć tej operacji!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Tak, usuń',
+        cancelButtonText: 'Anuluj'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route('teacher.projects.destroy', { project }));
+        }
+    });
+};
 </script>
 
 <template>
@@ -32,6 +49,7 @@ const props = defineProps({
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Opis</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Data zakończenia</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Pokaż</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Usuń</th>
                             </tr>
                             </thead>
 
@@ -41,6 +59,7 @@ const props = defineProps({
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.description }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.due_date }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><Link :href="route('teacher.projects.show',{'project': project})">Pokaż</Link></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><button @click="confirmDelete(project)">Usuń</button></td>
                             </tr>
                             </tbody>
                         </table>
