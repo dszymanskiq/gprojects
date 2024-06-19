@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import {nextTick, onMounted, ref, watch} from 'vue';
+import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import {useToast} from "vue-toastification";
 
 defineProps({
     title: String,
@@ -25,6 +26,26 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
+const toast = useToast();
+const { props } = usePage();
+
+watch(() => props.flash, async (flash) => {
+    await nextTick();
+    handleFlashMessage(flash);
+}, { immediate: true });
+
+function handleFlashMessage(flash)
+{
+    if (flash.success) {
+        toast.success(flash.success);
+    } else if (flash.error) {
+        toast.error(flash.error);
+    } else if (flash.info) {
+        toast.info(flash.info);
+    }
+}
+
 </script>
 
 <template>

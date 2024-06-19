@@ -2,6 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
+import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
     projects: Array
@@ -30,7 +31,7 @@ const props = defineProps({
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Nazwa</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Opis</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Data zakończenia</th>
-                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Akcje</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Pokaż</th>
                             </tr>
                             </thead>
 
@@ -39,7 +40,7 @@ const props = defineProps({
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ project.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.description }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.due_date }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.show',{'project': project})">Przejdź</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><Link :href="route('teacher.projects.show',{'project': project})">Pokaż</Link></td>
                             </tr>
                             </tbody>
                         </table>

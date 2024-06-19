@@ -1,18 +1,41 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {Table} from "@protonemedia/inertiajs-tables-laravel-query-builder";
+import { Link, router } from "@inertiajs/vue3";
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     projects: Array
-})
+});
+
+const confirmLeave = (project) => {
+    Swal.fire({
+        title: 'Czy na pewno chcesz opuścić projekt?',
+        text: "Nie będziesz mógł cofnąć tej operacji!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Tak, opuść',
+        cancelButtonText: 'Anuluj'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.visit(route('student.projects.leave', { project }), {
+                method: 'get'
+            });
+        }
+    });
+};
 </script>
 
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-
-            </h2>
+            <div class="flex items-center justify-between">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Projekty
+                </h2>
+            </div>
         </template>
 
         <div class="py-12">
@@ -27,6 +50,7 @@ const props = defineProps({
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Opis</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Data zakończenia</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Akcje</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Opuść</th>
                             </tr>
                             </thead>
 
@@ -35,7 +59,8 @@ const props = defineProps({
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ project.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.description }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.due_date }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.show',{'project': project})">Przejdź</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><Link :href="route('student.projects.show',{'project': project})">Przejdź</Link></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><Link @click.prevent="confirmLeave(project)">Opuść</Link></td>
                             </tr>
                             </tbody>
                         </table>
