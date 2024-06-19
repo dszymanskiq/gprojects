@@ -8,8 +8,10 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+const props = defineProps(['project']);
+
 const form = useForm({
-    type: 'teacher',
+    type: props.project ? 'student' : 'teacher',
     name: '',
     email: '',
     password: '',
@@ -33,7 +35,7 @@ const submit = () => {
         </template>
 
         <form @submit.prevent="submit">
-            <div class="mb-3">
+            <div class="mb-3" v-if="!project">
                 <InputLabel for="name" value="Typ konta" />
                 <div class="w-full flex text-sm mt-1">
                     <div class="w-1/2 flex items-center space-x-2">

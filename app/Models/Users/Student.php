@@ -5,22 +5,35 @@ namespace App\Models\Users;
 use App\Models\Group;
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Parental\HasParent;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Student extends User
 {
-    use HasParent;
+    use HasParent, HasRelationships;
 
     protected $table = 'users';
 
     public function groups(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(Group::class, 'group_student','student_id');
     }
 
     public function projects()
     {
-        return $this->hasManyThrough(Project::class, Group::class);
+        return $this->hasManyDeep(
+            Project::class,
+            ['group_student', Group::class],
+            [
+                'student_id',
+                'id',
+                'id'
+            ],
+            [
+                'id',
+                'group_id',
+                'project_id'
+            ]
+        );
     }
 }
