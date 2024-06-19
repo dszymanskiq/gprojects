@@ -35,7 +35,7 @@ const props = defineProps({
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="project in projects['data']">
+                            <tr v-for="project in projects">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ project.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.description }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ project.due_date }}</td>

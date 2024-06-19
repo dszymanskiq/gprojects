@@ -12,8 +12,8 @@ const props = defineProps({
 })
 
 const form = useForm({
-    name: props.project['data'].name,
-    hours: props.project['data'].name,
+    name: props.project.name,
+    hours: props.project.name,
 })
 </script>
 
@@ -30,7 +30,7 @@ const form = useForm({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                    <form @submit.prevent="form.post(route('teacher.projects.tasks.update',{'project': project['data'], 'task': task['data']}))" class="space-y-6">
+                    <form @submit.prevent="form.post(route('teacher.projects.tasks.update',{'project': project, 'task': task['data']}))" class="space-y-6">
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="name" value="Nazwa" />
                             <TextInput

@@ -27,39 +27,39 @@ const props = defineProps({
                             <dl class="-my-3 divide-y divide-gray-100 text-sm">
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Nazwa</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project['data'].name }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.name }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Opis</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project['data'].description }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.description }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Link do dołączenia</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ route('join-project',{ project: project['data'] }) }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ route('join-project',{ project: project }) }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Data oddania</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project['data'].due_date }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.due_date }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Ilość grup</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project['data'].groups }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.groups }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Ilość studentów</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project['data'].students_count }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.students_count }}</dd>
                                 </div>
                             </dl>
                         </div>
 
                         <div class="flex justify-between items-center m-3">
                             <h1 class="font-bold">Zadania</h1>
-                            <a :href="route('teacher.projects.tasks.create',{'project': project['data']})" class="underline">Dodaj nowe zadanie</a>
+                            <a :href="route('teacher.projects.tasks.create',{'project': project})" class="underline">Dodaj nowe zadanie</a>
                         </div>
                         <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
                             <thead class="text-left">
@@ -72,11 +72,11 @@ const props = defineProps({
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="task in project['data']['tasks']">
+                            <tr v-for="task in project['tasks']">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.hours }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.tasks.edit',{'project': project['data'], 'task': task})">Edytuj</a></td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="cursor-pointer" @click="router.get(route('teacher.projects.tasks.destroy', {'project': project['data'].id, 'task': task.id}))">Usuń</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.tasks.edit',{'project': project, 'task': task})">Edytuj</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="cursor-pointer" @click="router.get(route('teacher.projects.tasks.destroy', {'project': project.id, 'task': task.id}))">Usuń</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -94,7 +94,7 @@ const props = defineProps({
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="task in project['data']['students']">
+                            <tr v-for="task in project['students']">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
                             </tr>
                             </tbody>
