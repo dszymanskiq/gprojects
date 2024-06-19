@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
-    public function join(Project $project)
+    public function join(Project $project): RedirectResponse
     {
         $projectGroupsIds = $project->groups()->pluck('id')->toArray();
         $isStudentInAnyProjectGroup = auth()->user()->groups()->whereIn('groups.id', $projectGroupsIds)->exists();
@@ -15,7 +16,14 @@ class ProjectController extends Controller
             $studentsCount = $project->students()->count();
             $groupToJoin = $project->groups()->skip($studentsCount/$project->groups)->first();
             auth()->user()->groups()->attach($groupToJoin);
+            return redirect()->route('student.dashboard')->with('success', 'Dołączyłeś do projektu '. $project->name);
         }
-        return redirect()->route('student.dashboard');
+        return redirect()->route('student.dashboard')->with('info', 'Dołączyłeś już wcześniej do tego projektu');
+    }
+
+    public function leave(Project $project)
+    {
+        auth()->user()->groups()->detach($project->groups()->pluck('id')->toArray());
+        return redirect()->route('student.dashboard')->with('success', 'Opuściłeś projekt '. $project->name);
     }
 }
