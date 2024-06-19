@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Users\Teacher::class, 'teacher_id');
+            $table->string('slug')->unique();
+            $table->foreignIdFor(\App\Models\User::class, 'teacher_id')->constrained('users')->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamp('due_date')->nullable();

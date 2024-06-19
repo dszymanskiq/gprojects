@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Project::class);
+            $table->foreignIdFor(\App\Models\Project::class)->constrained()->cascadeOnDelete();
+            $table->integer('group_number')->default(1);
             $table->timestamps();
         });
     }
