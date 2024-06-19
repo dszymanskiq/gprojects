@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -31,8 +32,8 @@ class ProjectController extends Controller
 
     public function show(Project $project): Response
     {
-        return Inertia::render('Student/Tasks/Index', [
-            'project' => $project->load(['tasks'])->loadCount('tasks'),
+        return Inertia::render('Student/Projects/Show', [
+            'project' => new ProjectResource($project->load(['students.groups','tasks.student', 'groups'])->loadCount('students'))
         ]);
     }
 }
