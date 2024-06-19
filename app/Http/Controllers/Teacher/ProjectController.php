@@ -39,4 +39,10 @@ class ProjectController extends Controller
             'project' => new ProjectResource($project->load(['students','tasks.student'])->loadCount('students'))
         ]);
     }
+
+    public function destroy(Project $project): RedirectResponse
+    {
+        $project->delete();
+        return redirect()->route('dashboard');
+    }
 }
