@@ -110,15 +110,16 @@ const confirmDelete = (project, task) => {
                             <thead class="text-left">
                             <tr>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Imię i nazwisko</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Numer grupy</th>
                             </tr>
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
                             <tr v-for="student in project['students']">
-                                <td>
-                                    {{ student.groups.find((group) => group.project_id === project.id).pivot.group_number }}
-                                </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ student.name }}</td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">
+                                    {{ student.groups.find((group) => group.project_id === project.id).group_number }}
+                                </td>
                             </tr>
                             </tbody>
                         </table>
