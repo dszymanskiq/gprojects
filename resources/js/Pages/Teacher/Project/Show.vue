@@ -66,6 +66,7 @@ const props = defineProps({
                             <tr>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Nazwa</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Szacowana ilość godzin</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Student</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Akcje</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Akcje</th>
                             </tr>
@@ -75,8 +76,9 @@ const props = defineProps({
                             <tr v-for="task in project['tasks']">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.hours }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.tasks.edit',{'project': project, 'task': task})">Edytuj</a></td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="cursor-pointer" @click="router.get(route('teacher.projects.tasks.destroy', {'project': project.id, 'task': task.id}))">Usuń</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student ?? "Brak" }}</td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.tasks.edit',{'task': task})">Edytuj</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="cursor-pointer" @click="router.get(route('teacher.tasks.destroy', { 'task': task.id}))">Usuń</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -94,8 +96,11 @@ const props = defineProps({
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="task in project['students']">
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
+                            <tr v-for="student in project['students']">
+                                <td>
+                                    {{ student.groups.find((group) => group.project_id === project.id).pivot.group_number }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ student.name }}</td>
                             </tr>
                             </tbody>
                         </table>

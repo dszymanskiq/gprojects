@@ -14,6 +14,7 @@ const props = defineProps({
 const form = useForm({
     name: props.project.name,
     hours: props.project.name,
+    student_id: props.project.student_id
 })
 </script>
 
@@ -51,6 +52,22 @@ const form = useForm({
                             />
                             <InputError :message="form.errors.hours" class="mt-2" />
                         </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="hours" value="Przypisany student" />
+                            <select
+                                v-model="form.student_id"
+                            >
+                                <option v-for="student in project.students" :value="student.id">{{ student.name }}</option>
+                            </select>
+                            <TextInput
+                                id="hours"
+                                v-model="form.hours"
+                                type="text"
+                                class="mt-1 block w-full"
+                            />
+                            <InputError :message="form.errors.hours" class="mt-2" />
+                        </div>
+
 
                         <PrimaryButton>
                             Zapisz

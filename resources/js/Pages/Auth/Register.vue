@@ -35,20 +35,6 @@ const submit = () => {
         </template>
 
         <form @submit.prevent="submit">
-            <div class="mb-3" v-if="!project">
-                <InputLabel for="name" value="Typ konta" />
-                <div class="w-full flex text-sm mt-1">
-                    <div class="w-1/2 flex items-center space-x-2">
-                        <input type="radio" id="type-teacher" v-model="form.type" value="teacher">
-                        <InputLabel for="type-teacher" value="Nauczyciel" />
-                    </div>
-                    <div class="w-1/2 flex items-center space-x-2">
-                        <input type="radio" id="type-student" v-model="form.type" value="student">
-                        <InputLabel for="type-student" value="Student" />
-                    </div>
-                </div>
-                <InputError class="mt-2" :message="form.errors.type" />
-            </div>
             <div>
                 <InputLabel for="name" value="Imię i nazwisko" />
                 <TextInput

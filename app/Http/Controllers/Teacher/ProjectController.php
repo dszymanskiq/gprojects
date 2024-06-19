@@ -36,7 +36,7 @@ class ProjectController extends Controller
     public function show(Project $project): Response
     {
         return Inertia::render('Teacher/Project/Show', [
-            'project' => new ProjectResource($project->load(['students','tasks.student'])->loadCount('students'))
+            'project' => new ProjectResource($project->load(['students.groups','tasks.student', 'groups'])->loadCount('students'))
         ]);
     }
 
