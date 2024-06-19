@@ -24,7 +24,7 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request, Project $project)
     {
         $project->tasks()->create($request->only(['name','hours']));
-        return redirect()->route('teacher.projects.show',['project' => $project]);
+        return redirect()->route('teacher.projects.show',['project' => $project])->with('success', 'Zadanie zostało dodane');
     }
 
     public function edit(Project $project, Task $task): Response
@@ -38,12 +38,12 @@ class TaskController extends Controller
     public function update(StoreTaskRequest $request, Project $project, Task $task)
     {
         $task->update($request->only(['name','hours', 'student_id']));
-        return redirect()->route('teacher.projects.show',['project' => $project]);
+        return redirect()->route('teacher.projects.show',['project' => $project])->with('success', 'Zadanie zostało zaktualizowane');
     }
 
     public function destroy(Project $project, Task $task)
     {
         $task->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Zadanie zostało usunięte');
     }
 }

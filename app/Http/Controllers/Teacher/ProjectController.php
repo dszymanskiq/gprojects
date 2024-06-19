@@ -30,7 +30,7 @@ class ProjectController extends Controller
             'slug' => Str::random(6)
         ]);
         auth()->user()->projects()->create($request->only(['name','description','due_date','groups','slug']));
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('success', 'Projekt został dodany');
     }
 
     public function show(Project $project): Response
@@ -43,6 +43,6 @@ class ProjectController extends Controller
     public function destroy(Project $project): RedirectResponse
     {
         $project->delete();
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('success', 'Projekt został usunięty');
     }
 }
