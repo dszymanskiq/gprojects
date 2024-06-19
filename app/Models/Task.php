@@ -11,7 +11,8 @@ class Task extends Model
     protected $fillable = [
         'id',
         'name',
-        'hours'
+        'hours',
+        'student_id'
     ];
 
     public function project(): \Illuminate\Database\Eloquent\Relations\BelongsTo

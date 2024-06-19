@@ -15,7 +15,7 @@ const props = defineProps({
 const form = useForm({
     name: null,
     description: null,
-    due_date: '2023-03-01 23:59:59',
+    due_date: '2024-06-30 23:59:59',
     groups: 1,
 })
 </script>

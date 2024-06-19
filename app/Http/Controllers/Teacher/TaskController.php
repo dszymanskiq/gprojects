@@ -7,7 +7,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
-use Illuminate\Console\View\Components\Task;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,14 +30,14 @@ class TaskController extends Controller
     public function edit(Project $project, Task $task): Response
     {
         return Inertia::render('Teacher/Task/Edit', [
-            'project' => new ProjectResource($project),
+            'project' => new ProjectResource($project->load('students')),
             'task' => new TaskResource($task)
         ]);
     }
 
     public function update(StoreTaskRequest $request, Project $project, Task $task)
     {
-        $project->tasks()->create($request->only(['name','hours']));
+        $task->update($request->only(['name','hours', 'student_id']));
         return redirect()->route('teacher.projects.show',['project' => $project]);
     }
 

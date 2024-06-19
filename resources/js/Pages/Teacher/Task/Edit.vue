@@ -12,9 +12,9 @@ const props = defineProps({
 })
 
 const form = useForm({
-    name: props.project.name,
-    hours: props.project.name,
-    student_id: props.project.student_id
+    name: props.task.name,
+    hours: props.task.hours,
+    student_id: props.task.student_id
 })
 </script>
 
@@ -31,7 +31,7 @@ const form = useForm({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                    <form @submit.prevent="form.post(route('teacher.projects.tasks.update',{'project': project, 'task': task['data']}))" class="space-y-6">
+                    <form @submit.prevent="form.put(route('teacher.projects.tasks.update',{'project': project, 'task': task}))" class="space-y-6">
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="name" value="Nazwa" />
                             <TextInput
@@ -55,16 +55,11 @@ const form = useForm({
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="hours" value="Przypisany student" />
                             <select
+                                class="w-full"
                                 v-model="form.student_id"
                             >
-                                <option v-for="student in project.students" :value="student.id">{{ student.name }}</option>
+                                <option v-for="student in project.students" :value="student.id" :checked="form.student_id === student.id">{{ student.name }}</option>
                             </select>
-                            <TextInput
-                                id="hours"
-                                v-model="form.hours"
-                                type="text"
-                                class="mt-1 block w-full"
-                            />
                             <InputError :message="form.errors.hours" class="mt-2" />
                         </div>
 

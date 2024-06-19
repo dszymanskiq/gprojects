@@ -2,10 +2,28 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
 import {router} from "@inertiajs/vue3";
+import Swal from "sweetalert2";
 
 const props = defineProps({
     project: Object
-})
+});
+
+const confirmDelete = (project, task) => {
+    Swal.fire({
+        title: 'Czy na pewno chcesz usunąć to zadanie?',
+        text: "Nie będziesz mógł cofnąć tej operacji!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Tak, usuń',
+        cancelButtonText: 'Anuluj'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route('teacher.projects.tasks.destroy', { project, task }));
+        }
+    });
+};
 </script>
 
 <template>
@@ -77,8 +95,8 @@ const props = defineProps({
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.hours }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student ?? "Brak" }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.tasks.edit',{'task': task})">Edytuj</a></td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="cursor-pointer" @click="router.get(route('teacher.tasks.destroy', { 'task': task.id}))">Usuń</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.tasks.edit',{'project': project, 'task': task})">Edytuj</a></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><button @click="confirmDelete(project, task)">Usuń</button></td>
                             </tr>
                             </tbody>
                         </table>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Project::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Users\Student::class)->nullable();
+            $table->foreignIdFor(\App\Models\Users\Student::class, 'student_id')->nullable();
             $table->string('name');
             $table->integer('hours')->nullable();
             $table->timestamps();
