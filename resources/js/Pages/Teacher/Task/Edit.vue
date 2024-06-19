@@ -59,6 +59,7 @@ const form = useForm({
                                 v-model="form.student_id"
                             >
                                 <option v-for="student in project.students" :value="student.id" :checked="form.student_id === student.id">{{ student.name }}</option>
+                                <option :value="null" :checked="form.student_id === null">Brak</option>
                             </select>
                             <InputError :message="form.errors.hours" class="mt-2" />
                         </div>

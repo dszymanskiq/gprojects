@@ -75,7 +75,7 @@ const confirmDelete = (project, task) => {
                             </dl>
                         </div>
 
-                        <div class="flex justify-between items-center m-3">
+                        <div class="flex justify-between items-center m-3 mt-20">
                             <h1 class="font-bold">Zadania</h1>
                             <a :href="route('teacher.projects.tasks.create',{'project': project})" class="underline">Dodaj nowe zadanie</a>
                         </div>
@@ -94,7 +94,7 @@ const confirmDelete = (project, task) => {
                             <tr v-for="task in project['tasks']">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.hours }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student ?? "Brak" }}</td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student?.name ?? "Brak" }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a :href="route('teacher.projects.tasks.edit',{'project': project, 'task': task})">Edytuj</a></td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><button @click="confirmDelete(project, task)">Usuń</button></td>
                             </tr>
@@ -103,7 +103,7 @@ const confirmDelete = (project, task) => {
 
                         <hr>
 
-                        <div class="flex justify-between items-center m-3">
+                        <div class="flex justify-between items-center m-3 mt-20">
                             <h1 class="font-bold">Studenci</h1>
                         </div>
                         <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
