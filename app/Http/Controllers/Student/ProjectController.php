@@ -32,8 +32,20 @@ class ProjectController extends Controller
 
     public function show(Project $project): Response
     {
+        $projects = new ProjectResource($project->load(['students.groups','tasks.student', 'groups'])->loadCount('students'));
+        $projectsCollection = collect([$projects])->map(function($project) {
+            $project->students = $project->students->map(function($student) {
+                $student->timerEntries = $student->timerEntries()->whereIn('student_id', auth()->user()->id)->get();
+                return $student;
+            });
+            $project->tasks = $project->tasks->map(function($task) {
+                $task->timerEntries = $task->timerEntries()->where('task_id', $task->id)->get();
+                return $task;
+            });
+            return $project;
+        });
         return Inertia::render('Student/Projects/Show', [
-            'project' => new ProjectResource($project->load(['students.groups','tasks.student', 'groups'])->loadCount('students'))
+            'project' => $projectsCollection->first()
         ]);
     }
 }

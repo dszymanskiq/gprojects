@@ -4,7 +4,9 @@ namespace App\Models\Users;
 
 use App\Models\Group;
 use App\Models\Project;
+use App\Models\TimerEntry;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Parental\HasParent;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
@@ -35,5 +37,10 @@ class Student extends User
                 'project_id'
             ]
         );
+    }
+
+    public function timerEntries(): HasMany
+    {
+        return $this->hasMany(TimerEntry::class, 'student_id');
     }
 }

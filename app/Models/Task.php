@@ -24,4 +24,26 @@ class Task extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    public function timerEntries(): HasMany
+    {
+        return $this->hasMany(TimerEntry::class);
+    }
+
+    protected function currentStudentRegisteredTime(): Attribute
+    {
+        $result = 0;
+        foreach($this->timerEntries as $timerEntry) {
+            if($timerEntry->end_at) {
+                $result += $timerEntry->start_at->diffInSeconds($timerEntry->end_at);
+            } else {
+                $result += $timerEntry->start_at->diffInSeconds(now());
+            }
+        }
+        return Attribute::make(
+            get: static function () use ($result) {
+                return $result;
+            }
+        );
+    }
 }

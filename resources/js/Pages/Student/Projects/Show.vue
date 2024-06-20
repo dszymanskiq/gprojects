@@ -1,13 +1,84 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import { router } from "@inertiajs/vue3";
+import {ref, onBeforeUnmount, onMounted, reactive} from "vue";
+import {useTimeFormatter} from "@/Composables/useTimeFormatter";
 
 const props = defineProps({
     project: Object,
     user: Object
 });
+
+const { secondsToHHMMSS } = useTimeFormatter();
+
+const project = props.project;
+const tasks = ref([...props.project.tasks]);
+let studentTasksTimes = reactive({});
+let tasksTimes = reactive({});
+const intervals = {};
+
+function computeCurrentRegisteredTime(task, type = 'student') {
+    let base = type === 'student' ? task.studentTimerEntries : task.timerEntries;
+    if(!base) return 0;
+    return base.reduce((acc, timerEntry) => {
+        if (timerEntry.end_at === null) {
+            return acc + (new Date().getTime() - new Date(timerEntry.start_at).getTime()) / 1000;
+        }
+        return acc + (new Date(timerEntry.end_at).getTime() - new Date(timerEntry.start_at).getTime()) / 1000;
+    }, 0);
+}
+
+onMounted(() => {
+    tasks.value.forEach(task => {
+        task.current_student_registered_time = computeCurrentRegisteredTime(task);
+        studentTasksTimes[task.id] = computeCurrentRegisteredTime(task);
+        tasksTimes[task.id] = computeCurrentRegisteredTime(task,'all');
+    });
+});
+
+function syncWithBackend() {
+    router.reload({
+        method: 'get',
+        preserveScroll: true,
+        preserveState: true
+    });
+}
+
+function startTimer(task) {
+    if (!intervals[task.id]) {
+        intervals[task.id] = setInterval(() => {
+            task.current_student_registered_time += 1;
+            studentTasksTimes[task.id] += 1;
+            tasksTimes[task.id] += 1;
+            router.visit(route('student.projects.show', {project: project.id}), {
+                preserveScroll: true,
+                preserveState: false
+            });
+        }, 1000);
+        router.visit(route('student.projects.tasks.timer.start', {project: project.id, task: task.id}), {
+            preserveScroll: true,
+            preserveState: false
+        });
+    }
+}
+
+function stopTimer(task) {
+    if (intervals[task.id]) {
+        clearInterval(intervals[task.id]);
+        delete intervals[task.id];
+    }
+    router.get(route('student.projects.tasks.timer.stop', {project: project.id, task: task.id}), {
+        preserveScroll: true,
+        preserveState: false
+    });
+}
+
+// onBeforeUnmount(() => {
+//     Object.values(intervals).forEach(clearInterval);
+// });
 
 </script>
 
@@ -57,34 +128,55 @@ const props = defineProps({
 
                         <div class="flex justify-between items-center m-3 mt-20">
                             <h1 class="font-bold">Zadania</h1>
-                            <a :href="route('teacher.projects.tasks.create',{'project': project})" class="underline">Dodaj nowe zadanie</a>
                         </div>
                         <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
                             <thead class="text-left">
                             <tr>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Nazwa</th>
-                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Szacowana ilość godzin</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Szacowana ilość
+                                    godzin
+                                </th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Student</th>
-                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Zarejestrowany czas</th>
-                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Akcje</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Zarejestrowany czas ogólnie</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Twój zarejestrowany czas</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 text-center">Akcje</th>
                             </tr>
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="task in project['tasks']">
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ task.name }}</td>
+                            <tr v-for="task in tasks" :key="task.id">
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">
+                                    <p class="font-medium">{{ task.name }}</p>
+                                    <p class="text-xs">{{ task.description }}</p>
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.hours }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student?.name ?? "Brak" }}</td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">---</td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{
+                                        task.student?.name ?? "Brak"
+                                    }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                    {{ secondsToHHMMSS(studentTasksTimes[task.id]) }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                    {{ secondsToHHMMSS(tasksTimes[task.id]) }}
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                                     <template v-if="task.student?.id === user.id">
-                                        Akcje
+                                        <div class="space-x-2 text-xl text-center">
+                                            <FontAwesomeIcon
+                                                @click="startTimer(task)"
+                                                class="cursor-pointer transition-all text-green-500 hover:text-green-600"
+                                                :icon="faPlay"
+                                                v-if="!task.timerEntries?.find((timerEntry) => timerEntry.end_at === null)"/>
+                                            <FontAwesomeIcon
+                                                @click="stopTimer(task)"
+                                                class="cursor-pointer transition-all text-red-500 hover:text-red-600"
+                                                :icon="faPause"
+                                                v-else/>
+                                        </div>
                                     </template>
                                     <template v-else>
-                                        <div class="space-x-2 text-xl">
-                                            <FontAwesomeIcon class="cursor-pointer" :icon="faPlay" />
-                                            <FontAwesomeIcon class="cursor-pointer" :icon="faPause" />
-                                        </div>
+                                        ---
                                     </template>
                                 </td>
                             </tr>
@@ -101,14 +193,18 @@ const props = defineProps({
                             <tr>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Imię i nazwisko</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Numer grupy</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Przepracowany czas</th>
                             </tr>
                             </thead>
 
                             <tbody class="divide-y divide-gray-200">
-                            <tr v-for="student in project['students']">
+                            <tr v-for="student in project['students']" :key="student.id">
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">{{ student.name }}</td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">
                                     {{ student.groups.find((group) => group.project_id === project.id).group_number }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-900">
+                                    {{ secondsToHHMMSS(computeCurrentRegisteredTime(student)) }}
                                 </td>
                             </tr>
                             </tbody>

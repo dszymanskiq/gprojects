@@ -19,6 +19,8 @@ class TaskResource extends JsonResource
             'student_id' => $this->student_id,
             'name' => $this->name,
             'hours' => $this->hours
+            'studentTimerEntries' => $this->timerEntries()->where('student_id', auth()->user()->id)->count() ? TimerEntryResource::collection($this->timerEntries()->where('student_id', auth()->user()->id)->get()): null,
+            'timerEntries' => $this->timerEntries ? TimerEntryResource::collection($this->timerEntries): null,
         ];
     }
 }
