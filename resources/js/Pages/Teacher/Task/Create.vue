@@ -14,6 +14,7 @@ const props = defineProps({
 
 const form = useForm({
     name: null,
+    description: null,
     hours: null,
 })
 </script>
@@ -41,6 +42,16 @@ const form = useForm({
                                 class="mt-1 block w-full"
                             />
                             <InputError :message="form.errors.name" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="description" value="Opis" />
+                            <TextInput
+                                id="description"
+                                v-model="form.description"
+                                type="text"
+                                class="mt-1 block w-full"
+                            />
+                            <InputError :message="form.errors.description" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="hours" value="Szacowanych godzin" />

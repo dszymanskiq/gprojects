@@ -23,7 +23,7 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request, Project $project)
     {
-        $project->tasks()->create($request->only(['name','hours']));
+        $project->tasks()->create($request->only(['name','description','hours']));
         return redirect()->route('teacher.projects.show',['project' => $project])->with('success', 'Zadanie zostało dodane');
     }
 
@@ -37,7 +37,7 @@ class TaskController extends Controller
 
     public function update(StoreTaskRequest $request, Project $project, Task $task)
     {
-        $task->update($request->only(['name','hours', 'student_id']));
+        $task->update($request->only(['name','description', 'hours', 'student_id']));
         return redirect()->route('teacher.projects.show',['project' => $project])->with('success', 'Zadanie zostało zaktualizowane');
     }
 

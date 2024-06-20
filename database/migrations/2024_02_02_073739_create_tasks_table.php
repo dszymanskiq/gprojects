@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Project::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Users\Student::class, 'student_id')->nullable();
             $table->string('name');
+            $table->string('description')->nullable();
             $table->integer('hours')->nullable();
             $table->timestamps();
         });
