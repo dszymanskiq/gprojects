@@ -30,7 +30,7 @@ class ProjectResource extends JsonResource
             'closed' => $this->closed,
             'students_count' => $this->whenCounted('students'),
             'students' => $this->whenLoaded('students'),
-            'tasks' => $this->whenLoaded('tasks')
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
         ];
     }
 }
