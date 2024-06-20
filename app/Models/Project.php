@@ -16,6 +16,7 @@ class Project extends Model
         'name',
         'description',
         'groups',
+        'closed',
         'due_date',
         'slug'
     ];

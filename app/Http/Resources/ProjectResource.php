@@ -27,6 +27,7 @@ class ProjectResource extends JsonResource
             'slug' => $this->slug,
             'groups' => $this->groups,
             'due_date' => $this->due_date,
+            'closed' => $this->closed,
             'students_count' => $this->whenCounted('students'),
             'students' => $this->whenLoaded('students'),
             'tasks' => $this->whenLoaded('tasks')

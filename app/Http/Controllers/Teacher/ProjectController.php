@@ -53,4 +53,20 @@ class ProjectController extends Controller
         $project->delete();
         return redirect()->route('dashboard')->with('success', 'Projekt został usunięty');
     }
+
+    public function close(Project $project)
+    {
+        $tasks = $project->tasks;
+        foreach ($tasks as $task) {
+            $task->timerEntries()->whereNull('end_at')->update(['end_at' => now()]);
+        }
+        $project->update(['closed' => true]);
+        return redirect()->back()->with('success', 'Projekt został zakończony');
+    }
+
+    public function open(Project $project)
+    {
+        $project->update(['closed' => false]);
+        return redirect()->back()->with('success', 'Projekt został zakończony');
+    }
 }
