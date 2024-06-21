@@ -100,7 +100,7 @@ const confirmDelete = (project, task) => {
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Ilość grup</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project.groups }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.groups_count }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
@@ -135,7 +135,11 @@ const confirmDelete = (project, task) => {
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">
                                     {{ secondsToHHMMSS(computeCurrentRegisteredTime(task, 'global')) }}
                                 </td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ task.student?.name ?? "Brak" }}</td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                    <p v-for="group in project.groups">
+                                        <span>Grupa {{ group.group_number }}: {{ Object.values(task.students)?.find((student) => student.group_id === group.id)?.name ?? "---" }}</span>
+                                    </p>
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700 text-center space-x-2">
                                     <FontAwesomeIcon
                                         @click="router.visit(route('teacher.projects.tasks.edit',{'project': project, 'task': task}))"

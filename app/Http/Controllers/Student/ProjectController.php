@@ -17,7 +17,7 @@ class ProjectController extends Controller
         $isStudentInAnyProjectGroup = auth()->user()->groups()->whereIn('groups.id', $projectGroupsIds)->exists();
         if(!$isStudentInAnyProjectGroup) {
             $studentsCount = $project->students()->count();
-            $groupToJoin = $project->groups()->skip($studentsCount/$project->groups)->first();
+            $groupToJoin = $project->groups()->skip(($studentsCount%$project->groups_count))->first();
             auth()->user()->groups()->attach($groupToJoin);
             return redirect()->route('student.dashboard')->with('success', 'Dołączyłeś do projektu '. $project->name);
         }
@@ -32,20 +32,23 @@ class ProjectController extends Controller
 
     public function show(Project $project): Response
     {
-        $projects = new ProjectResource($project->load(['students.groups','tasks.student', 'groups'])->loadCount('students'));
+        $projects = new ProjectResource($project->load(['students.groups','tasks.students', 'groups'])->loadCount('students'));
         $projectsCollection = collect([$projects])->map(function($project) {
-            $project->students = $project->students->map(function($student) {
-                $student->timerEntries = $student->timerEntries()->whereIn('student_id', auth()->user()->id)->get();
+            $project->students = $project->students->map(function($student) use($project) {
+                $student->timerEntries = $student->timerEntries()->whereHas('task', function ($query) use ($project) {
+                    $query->where('project_id', $project->id);
+                })->get();
                 return $student;
             });
             $project->tasks = $project->tasks->map(function($task) {
-                $task->timerEntries = $task->timerEntries()->where('task_id', $task->id)->get();
+                $task->timerEntries = $task->timerEntries()->get();
                 return $task;
             });
             return $project;
-        });
+        })->toArray();
         return Inertia::render('Student/Projects/Show', [
-            'project' => $projectsCollection->first()
+            'group' => auth()->user()->groups()->where('project_id', $project->id)->first(),
+            'project' => $projectsCollection[0]
         ]);
     }
 }

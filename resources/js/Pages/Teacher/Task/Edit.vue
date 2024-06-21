@@ -9,14 +9,25 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 const props = defineProps({
     project: Object,
     task: Object
-})
+});
+
+let studentIds = {};
+props.project.groups.forEach(group => {
+    studentIds[group.id] = null;
+    let student = props.task?.students?.find((student) => student?.group_id === group.id) ?? null;
+    if(student) {
+        studentIds[group.id] = student.id;
+    }
+});
+
 
 const form = useForm({
     name: props.task.name,
     description: props.task.description,
     hours: props.task.hours,
-    student_id: props.task.student_id
+    students_ids: studentIds
 })
+console.log(props.task);
 </script>
 
 <template>
@@ -63,16 +74,17 @@ const form = useForm({
                             />
                             <InputError :message="form.errors.hours" class="mt-2" />
                         </div>
-                        <div class="col-span-6 sm:col-span-4">
-                            <InputLabel for="hours" value="Przypisany student" />
+                        <div class="col-span-6 sm:col-span-4" v-for="group in project.groups">
+                            <InputLabel :for="'student-id-'+group.id" :value="'Przypisany student - grupa ' + group.group_number" />
                             <select
                                 class="w-full"
-                                v-model="form.student_id"
+                                v-model="form.students_ids[group.id]"
                             >
-                                <option v-for="student in project.students" :value="student.id" :checked="form.student_id === student.id">{{ student.name }}</option>
+                                {{ task }}
+                                <option v-for="student in project.students.filter((student) => student.groups?.find((groupLocal) => groupLocal.id === group.id))" :value="student.id" :checked="form.student_id === student.id">{{ student.name }}</option>
                                 <option :value="null" :checked="form.student_id === null">Brak</option>
                             </select>
-                            <InputError :message="form.errors.hours" class="mt-2" />
+                            <InputError :message="form.errors.students_ids?.[group.id]" class="mt-2" />
                         </div>
 
 

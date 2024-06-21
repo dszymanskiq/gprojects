@@ -15,7 +15,7 @@ class Project extends Model
         'teacher_id',
         'name',
         'description',
-        'groups',
+        'groups_count',
         'closed',
         'due_date',
         'slug'

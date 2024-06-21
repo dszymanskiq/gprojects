@@ -8,7 +8,9 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\Users\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,15 +31,33 @@ class TaskController extends Controller
 
     public function edit(Project $project, Task $task): Response
     {
+        $taskResource = new TaskResource($task);
+        $taskResource = collect([$taskResource])->map(function($task) use($project) {
+            $task->students = [];
+            foreach($project->groups as $group) {
+                $task->students[$group->id] = $task->students()->whereHas('groups', function ($query) use ($group) {
+                    $query->where('groups.id', $group->id);
+                })->first();
+                if($task->students[$group->id]) {
+                    $task->students[$group->id]->group_id = $group->id;
+                }
+            }
+            return $task;
+        });
         return Inertia::render('Teacher/Task/Edit', [
-            'project' => new ProjectResource($project->load('students')),
-            'task' => new TaskResource($task)
+            'project' => new ProjectResource($project->load('students.groups', 'groups')),
+            'task' => $taskResource->first()
         ]);
     }
 
     public function update(StoreTaskRequest $request, Project $project, Task $task)
     {
-        $task->update($request->only(['name','description', 'hours', 'student_id']));
+        $task->update($request->only(['name','description', 'hours']));
+        $task->students()->detach();
+        foreach($request->input('students_ids') as $studentId) {
+            $student = Student::find($studentId);
+            $task->students()->attach($student);
+        }
         return redirect()->route('teacher.projects.show',['project' => $project])->with('success', 'Zadanie zostało zaktualizowane');
     }
 

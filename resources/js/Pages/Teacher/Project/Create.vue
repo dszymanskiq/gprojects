@@ -16,7 +16,7 @@ const form = useForm({
     name: null,
     description: null,
     due_date: '2024-06-30 23:59:59',
-    groups: 1,
+    groups_count: 1,
 })
 </script>
 
@@ -65,14 +65,14 @@ const form = useForm({
                             <InputError :message="form.errors.due_date" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
-                            <InputLabel for="groups" value="Ilość grup" />
+                            <InputLabel for="groups_count" value="Ilość grup" />
                             <TextInput
-                                id="groups"
-                                v-model="form.groups"
+                                id="groups_count"
+                                v-model="form.groups_count"
                                 type="text"
                                 class="mt-1 block w-full"
                             />
-                            <InputError :message="form.errors.groups" class="mt-2" />
+                            <InputError :message="form.errors.groups_count" class="mt-2" />
                         </div>
 
                         <PrimaryButton>

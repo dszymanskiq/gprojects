@@ -9,7 +9,8 @@ import {useTimeFormatter} from "@/Composables/useTimeFormatter";
 
 const props = defineProps({
     project: Object,
-    user: Object
+    user: Object,
+    group: Object
 });
 
 const { secondsToHHMMSS } = useTimeFormatter();
@@ -116,7 +117,12 @@ function stopTimer(task) {
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                                     <dt class="font-medium text-gray-900">Ilość grup</dt>
-                                    <dd class="text-gray-700 sm:col-span-2">{{ project.groups }}</dd>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ project.groups_count }}</dd>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+                                    <dt class="font-medium text-gray-900">Twoja grupa</dt>
+                                    <dd class="text-gray-700 sm:col-span-2">{{ group.group_number }}</dd>
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
@@ -155,13 +161,13 @@ function stopTimer(task) {
                                     }}
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                    {{ secondsToHHMMSS(studentTasksTimes[task.id]) }}
-                                </td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                                     {{ secondsToHHMMSS(tasksTimes[task.id]) }}
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                    <template v-if="task.student?.id === user.id">
+                                    {{ secondsToHHMMSS(studentTasksTimes[task.id]) }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                    <template v-if="task.students?.find((student) => student.id === user.id)">
                                         <div class="space-x-2 text-xl text-center">
                                             <FontAwesomeIcon
                                                 @click="startTimer(task)"
@@ -204,7 +210,7 @@ function stopTimer(task) {
                                     {{ student.groups.find((group) => group.project_id === project.id).group_number }}
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-900">
-                                    {{ secondsToHHMMSS(computeCurrentRegisteredTime(student)) }}
+                                    {{ secondsToHHMMSS(computeCurrentRegisteredTime(student, 'global')) }}
                                 </td>
                             </tr>
                             </tbody>

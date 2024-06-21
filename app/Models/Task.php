@@ -6,6 +6,7 @@ use App\Models\Users\Student;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
@@ -23,9 +24,9 @@ class Task extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function students(): BelongsToMany
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsToMany(Student::class, 'student_task');
     }
 
     public function timerEntries(): HasMany

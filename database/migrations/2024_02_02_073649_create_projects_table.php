@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamp('due_date')->nullable();
-            $table->integer('groups')->nullable();
+            $table->integer('groups_count')->nullable();
             $table->boolean('closed')->default(false);
             $table->text('submission_text')->nullable();
             $table->json('submission_files')->nullable();

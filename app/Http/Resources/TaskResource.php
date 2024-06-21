@@ -16,11 +16,10 @@ class TaskResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_id' => $this->student_id,
             'name' => $this->name,
             'description' => $this->description,
             'hours' => $this->hours,
-            'student' => $this->student,
+            'students' => $this->students,
             'studentTimerEntries' => $this->timerEntries()->where('student_id', auth()->user()->id)->count() ? TimerEntryResource::collection($this->timerEntries()->where('student_id', auth()->user()->id)->get()): null,
             'timerEntries' => $this->timerEntries ? TimerEntryResource::collection($this->timerEntries): null,
         ];

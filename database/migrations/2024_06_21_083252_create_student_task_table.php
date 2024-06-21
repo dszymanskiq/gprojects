@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('student_task', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Project::class)->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->integer('hours')->nullable();
+            $table->foreignIdFor(\App\Models\Users\Student::class)->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Task::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('student_task');
     }
 };

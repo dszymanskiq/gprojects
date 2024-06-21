@@ -25,12 +25,13 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
-            'groups' => $this->groups,
+            'groups_count' => $this->groups_count,
             'due_date' => $this->due_date,
             'closed' => $this->closed,
             'students_count' => $this->whenCounted('students'),
             'students' => $this->whenLoaded('students'),
             'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
+            'groups' => $this->groups,
         ];
     }
 }

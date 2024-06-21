@@ -25,7 +25,7 @@ class StoreProjectRequest extends FormRequest
             'name' => 'string|max:255|min:1',
             'description' => 'string|max:255',
             'due_date' => 'date_format:Y-m-d H:i:s',
-            'groups' => 'numeric|min:1|max:255'
+            'groups_count' => 'numeric|min:1|max:255'
         ];
     }
 }
